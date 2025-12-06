@@ -8,13 +8,23 @@ for item in f:
     entries.append(item.split())
 
 
+def calc(it, op):
+    n = 0
+    if op == "+":
+        n = sum(it)
+
+    elif op == "*":
+        n = 1
+        for k in it:
+            n *= k
+    return n
+
+
 def part_one():
     grand_total = 0
-    idx = 0
-    for i in range(len(entries[0])):
 
+    for i in range(len(entries[0])):
         op = 0
-        n = 0
         nums = []
         for j in range(len(entries)):
             add = entries[j][i]
@@ -29,19 +39,57 @@ def part_one():
         if not nums:
             continue
 
-        if op == "+":
-
-            n = sum(nums)
-
-        elif op == "*":
-            n = 1
-            for k in nums:
-                n *= k
+        n = calc(nums, op)
 
         grand_total += n
 
     print(grand_total)
 
 
+def part_two():
+
+    nr = len(f)
+    nc = max(len(row) for row in f)
+    cols = []
+
+    for i in range(nc):
+        col = []
+        for j in range(nr):
+            if i < len(f[j]):
+                col.append(f[j][i])
+            else:
+                col.append(' ')
+        cols.append(col)
+
+    grand_total = 0
+
+    for idx in range(len(cols)):
+        if cols[idx] == " ":
+            idx += 1
+            continue
+
+        nums = []
+        op = cols[idx][-1]
+
+        for j in range(idx, len(cols)):
+            col = cols[j]
+
+            if all(c == ' ' for c in col):
+                idx = j
+                break
+
+            add = ''.join(col[:-1]).strip()
+            if add:
+                nums.append(int(add))
+        else:
+            idx = len(cols)
+
+        idx += 1
+        n = calc(nums, op)
+        grand_total += n
+
+    print(grand_total)
+
+
 if __name__ == "__main__":
-    part_one()
+    part_two()
